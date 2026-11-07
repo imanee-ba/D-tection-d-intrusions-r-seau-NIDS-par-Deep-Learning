@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIDS - Tableau de bord</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>🛡️ NIDS</h1>
+            <p>Détection d’intrusions réseau</p>
+        </div>
+
+    </header>
+
+    <main>
+
+        <!-- Importation du fichier CSV et choix du modèle. -->
+        <section class="card analyse-card">
+            <h2>Analyser le trafic réseau</h2>
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <label for="model_name">Modèle de détection :</label>
+
+                <select name="model_name" id="model_name">
+                    {% for key, model in all_models.items() %}
+                    <option value="{{ key }}" {% if key == selected_model_key %}selected{% endif %}>
+                        {{ model["label"] }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <input type="file" name="file" accept=".csv" required>
+
+                <button type="submit">Analyser</button>
+            </form>
+
+            {% if error %}
+            <p class="error">⚠ {{ error }}</p>
+            {% endif %}
+        </section>
+
+        <!-- Affiche les statistiques seulement après importation. -->
+        {% if stats %}
+
+        <section class="statistics">
+            <article class="card">
+                <span>Flux analysés</span>
+                <strong>{{ stats.total }}</strong>
+            </article>
+
+            <article class="card normal-card">
+                <span>Trafic normal</span>
+                <strong>{{ stats.normal }}</strong>
+                <small>{{ stats.normal_percent }} %</small>
+            </article>
+
+            <article class="card suspect-card">
+                <span>Trafic suspect</span>
+                <strong>{{ stats.suspect }}</strong>
+                <small>{{ stats.suspect_percent }} %</small>
+            </article>
+
+            <article class="card">
+                <span>Modèle utilisé</span>
+                <strong class="model-name">{{ selected_model["label"] }}</strong>
+                <small>Exactitude : {{ selected_model["metrics"]["accuracy"] }} %</small>
+            </article>
+        </section>
+
+        <!-- Graphe simple de trafic normal et suspect. -->
+        <section class="card">
+            <h2>Répartition du trafic</h2>
+
+            <p>Trafic normal — {{ stats.normal_percent }} %</p>
+            <div class="progress">
+                <div
+                    class="progress-normal"
+                    style="width: {{ stats.normal_percent }}%;"
+                ></div>
+            </div>
+
+            <p>Trafic suspect — {{ stats.suspect_percent }} %</p>
+            <div class="progress">
+                <div
+                    class="progress-suspect"
+                    style="width: {{ stats.suspect_percent }}%;"
+                ></div>
+            </div>
+        </section>
+
+        {% endif %}
+
+        <!-- Comparaison compacte des modèles. -->
+        <!-- Comparaison des modèles selon plusieurs métriques. -->
+<section class="card">
+    <h2>Comparaison des modèles</h2>
+
+    <!-- Graphe Accuracy. -->
+    <h3>Exactitude globale</h3>
+
+    <div class="comparison">
+        {% for model in comparison_models %}
+        <div class="comparison-item">
+            <span>{{ model["label"] }}</span>
+
+            <div class="comparison-bar">
+                <i style="width: {{ model['metrics']['accuracy'] }}%;"></i>
+            </div>
+
+            <b>{{ model["metrics"]["accuracy"] }} %</b>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Graphe Recall. -->
+    <h3>Taux de détection des attaques — Recall</h3>
+
+    <div class="comparison">
+        {% for model in comparison_models %}
+        <div class="comparison-item">
+            <span>{{ model["label"] }}</span>
+
+            <div class="comparison-bar recall-bar">
+                <i style="width: {{ model['metrics']['recall'] }}%;"></i>
+            </div>
+
+            <b>{{ model["metrics"]["recall"] }} %</b>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Graphe F1-score. -->
+    <h3>Score F1</h3>
+
+    <div class="comparison">
+        {% for model in comparison_models %}
+        <div class="comparison-item">
+            <span>{{ model["label"] }}</span>
+
+            <div class="comparison-bar f1-bar">
+                <i style="width: {{ model['metrics']['f1'] }}%;"></i>
+            </div>
+
+            <b>{{ model["metrics"]["f1"] }} %</b>
+        </div>
+        {% endfor %}
+    </div>
+
+    <p class="info">
+        Le recall mesure la capacité du modèle à détecter les attaques.
+        Le score F1 équilibre la précision et le taux de détection.
+    </p>
+</section>
+        <!-- Tableau unique contenant normal et attaques. -->
+        {% if results %}
+        <section class="card">
+            <div class="table-title">
+                <h2>Résultats de détection</h2>
+                <a href="/download">Télécharger le CSV</a>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>État</th>
+                            <th>Type d’attaque</th>
+                            <th>Score de risque</th>
+                            <th>Port destination</th>
+                            <th>Protocole</th>
+                            <th>Durée du flux</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for row in results %}
+                        <tr>
+                            <td>
+                                {% if row["Prediction"] == "Normal" %}
+                                <span class="badge normal">Normal</span>
+                                {% else %}
+                                <span class="badge suspect">Suspect</span>
+                                {% endif %}
+                            </td>
+
+                            <td>{{ row.get("Attack_type", "Non disponible") }}</td>
+                            <td>{{ row["Risk_score"] }}</td>
+                            <td>{{ row.get("Destination Port", "-") }}</td>
+                            <td>{{ row.get("Protocol", "-") }}</td>
+                            <td>{{ row.get("Flow Duration", "-") }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

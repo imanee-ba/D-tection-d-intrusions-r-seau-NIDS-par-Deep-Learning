@@ -1,0 +1,281 @@
+/* Couleurs principales du dashboard. */
+:root {
+    --fond: #f4f7fb;
+    --bleu: #146c94;
+    --vert: #1d9d68;
+    --rouge: #dc4c64;
+    --texte: #1d2939;
+    --gris: #667085;
+}
+
+/* Style général de la page. */
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    color: var(--texte);
+    background: var(--fond);
+}
+
+/* Barre supérieure du site. */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 8%;
+    color: white;
+    background: linear-gradient(135deg, #0b2e4f, #146c94);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header p {
+    margin: 5px 0 0;
+    opacity: 0.8;
+    font-size: 13px;
+}
+
+/* État du moteur. */
+.status {
+    color: #a7f3d0;
+    font-size: 13px;
+}
+
+/* Largeur du contenu. */
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 26px 20px;
+}
+
+/* Style commun des blocs. */
+.card {
+    margin-bottom: 20px;
+    padding: 22px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 3px 12px rgba(16, 24, 40, 0.08);
+}
+
+/* Titre des blocs. */
+.card h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+/* Formulaire d'analyse. */
+.analyse-card form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+select,
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    background: white;
+}
+
+/* Bouton principal. */
+button {
+    padding: 11px 18px;
+    border: 0;
+    border-radius: 6px;
+    color: white;
+    background: var(--bleu);
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Message d'erreur. */
+.error {
+    color: var(--rouge);
+    font-weight: bold;
+}
+
+/* Cartes de statistiques. */
+.statistics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.statistics .card {
+    margin: 0;
+}
+
+.statistics span {
+    color: var(--gris);
+    font-size: 13px;
+}
+
+.statistics strong {
+    display: block;
+    margin: 9px 0 4px;
+    font-size: 27px;
+}
+
+.statistics small {
+    color: var(--gris);
+}
+
+.normal-card strong {
+    color: var(--vert);
+}
+
+.suspect-card strong {
+    color: var(--rouge);
+}
+
+.model-name {
+    font-size: 18px !important;
+    color: var(--bleu);
+}
+
+/* Barres de répartition. */
+.progress {
+    overflow: hidden;
+    height: 18px;
+    margin: 8px 0 18px;
+    border-radius: 20px;
+    background: #e4e7ec;
+}
+
+.progress-normal,
+.progress-suspect {
+    height: 100%;
+    border-radius: 20px;
+}
+
+.progress-normal {
+    background: var(--vert);
+}
+
+.progress-suspect {
+    background: var(--rouge);
+}
+
+/* Graphe de comparaison. */
+.comparison {
+    display: grid;
+    gap: 15px;
+}
+
+.comparison-item {
+    display: grid;
+    grid-template-columns: 150px 1fr 70px;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.comparison-bar {
+    overflow: hidden;
+    height: 15px;
+    border-radius: 20px;
+    background: #e4e7ec;
+}
+
+.comparison-bar i {
+    display: block;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #146c94, #28b5e8);
+}
+
+.info {
+    color: var(--gris);
+    font-size: 12px;
+}
+
+/* Tableau de résultats. */
+.table-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table-title a {
+    padding: 9px 12px;
+    border-radius: 6px;
+    color: white;
+    background: var(--bleu);
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eaecf0;
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    color: var(--gris);
+    background: #f9fafb;
+}
+
+/* Badges Normal et Suspect. */
+.badge {
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.badge.normal {
+    color: #067647;
+    background: #d1fadf;
+}
+
+.badge.suspect {
+    color: #b42318;
+    background: #fee4e2;
+}
+
+/* Adaptation aux petits écrans. */
+@media (max-width: 800px) {
+    .statistics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .comparison-item {
+        grid-template-columns: 110px 1fr 55px;
+    }
+}
+
+@media (max-width: 500px) {
+    header {
+        padding: 20px;
+    }
+
+    .statistics {
+        grid-template-columns: 1fr;
+    }
+
+    .analyse-card form {
+        display: grid;
+    }
+}

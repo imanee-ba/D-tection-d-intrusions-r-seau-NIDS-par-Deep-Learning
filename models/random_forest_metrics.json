@@ -1,0 +1,18 @@
+{
+  "accuracy": 0.9998892408568327,
+  "normal_precision": 0.9997953021851492,
+  "normal_recall": 0.9999488176886068,
+  "suspect_precision": 0.9999609405515194,
+  "suspect_recall": 0.9998437805116188,
+  "suspect_f1_score": 0.9999023570996153,
+  "confusion_matrix": [
+    [
+      19537,
+      1
+    ],
+    [
+      4,
+      25601
+    ]
+  ]
+}
